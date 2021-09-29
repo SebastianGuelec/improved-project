@@ -5,22 +5,16 @@ import com.textify.textify.DTO.UserDTO;
 import com.textify.textify.DTO.UserUpdateDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.User;
-import com.textify.textify.errorHandling.ApiError;
 import com.textify.textify.errorHandling.GenericResponse;
 import com.textify.textify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("api/1.0")
@@ -48,7 +42,7 @@ public class UserController {
 
     @PutMapping("/users/{id:[0-9]+}")
     @PreAuthorize("#id == principal.id")
-    UserDTO updateUser(@PathVariable long id, @Valid , @RequestBody(required = false) UserUpdateDTO userUpdate) {
+    UserDTO updateUser(@PathVariable long id, @Valid @RequestBody(required = false) UserUpdateDTO userUpdate) {
         User updated = userService.update(id, userUpdate);
         return new UserDTO(updated);
     }

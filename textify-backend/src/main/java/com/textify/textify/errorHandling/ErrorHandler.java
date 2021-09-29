@@ -1,6 +1,7 @@
 package com.textify.textify.errorHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ public class ErrorHandler implements ErrorController {
 
     @RequestMapping("/error")
     ApiError handleError(WebRequest webRequest) {
-        Map<String, Object> attributes = errorAttributes.getErrorAttributes(webRequest, true);
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE));
 
         String message = (String) attributes.get("message");
         String url = (String) attributes.get("path");
@@ -27,6 +28,7 @@ public class ErrorHandler implements ErrorController {
 
     @Override
     public String getErrorPath() {
+
         return "/error";
     }
 

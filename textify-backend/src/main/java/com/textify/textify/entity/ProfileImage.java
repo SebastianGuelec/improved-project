@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProfileImage {
 
-    String message() default "{hoaxify.constraints.image.ProfileImage.message}";
+    String message() default "{}";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

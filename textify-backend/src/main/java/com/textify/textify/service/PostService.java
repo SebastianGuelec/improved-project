@@ -20,11 +20,14 @@ public class PostService {
 
     UploadRepo uploadRepo;
 
-    public PostService(PostRepo postRepo, UserService userService,UploadRepo uploadRepo ) {
+    FileService fileService;
+
+    public PostService(PostRepo postRepo, UserService userService,UploadRepo uploadRepo , FileService fileService ) {
         super();
         this.postRepo = postRepo;
         this.userService = userService;
         this.uploadRepo = uploadRepo;
+        this.fileService = fileService;
     }
 
     public Post save(User user, Post post) {
@@ -90,5 +93,13 @@ public class PostService {
         return (root, query, criteriaBuilder) -> {
             return criteriaBuilder.greaterThan(root.get("id"), id);
         };
+    }
+    public void deletePost(long id) {
+        Post post = postRepo.getOne(id);
+        if(post.getAttachment() != null) {
+            fileService.deleteAttachmentImage(post.getAttachment().getName());
+        }
+        postRepo.deleteById(id);
+
     }
     }

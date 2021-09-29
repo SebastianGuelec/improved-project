@@ -4,12 +4,13 @@ import com.textify.textify.DTO.PostDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.Post;
 import com.textify.textify.entity.User;
-import com.textify.textify.repo.PostRepo;
+import com.textify.textify.errorHandling.GenericResponse;
 import com.textify.textify.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +27,7 @@ public class PostController {
 
     @PostMapping("/posts")
     PostDTO createPost(@Valid @RequestBody Post post, @CurrentUser User user) {
-    return new PostDTO(user, post);
+    return new PostDTO(postService.save(user,post));
     }
 
     @GetMapping("/posts")
@@ -49,7 +50,7 @@ public class PostController {
             return ResponseEntity.ok(postService.getOldPosts(id, username, pageable).map(PostDTO::new));
         }
 
-        if(count == true) {
+        if(count) {
             long newPostCount = postService.getNewPostsCount(id, username);
             return ResponseEntity.ok(Collections.singletonMap("count", newPostCount));
         }
@@ -57,6 +58,13 @@ public class PostController {
         List<PostDTO> newPosts = postService.getNewPosts(id,username,pageable).stream()
                 .map(PostDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(newPosts);
+    }
+
+    @DeleteMapping("/posts/{id:[0-9]+}")
+    @PreAuthorize("@postSecurityService.isAllowedToDelete(#id, principal)")
+    GenericResponse deletePost(@PathVariable long id) {
+        postService.deletePost(id);
+        return new GenericResponse("Post is removed");
     }
 
     }

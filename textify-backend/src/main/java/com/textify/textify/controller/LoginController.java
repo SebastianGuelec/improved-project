@@ -6,8 +6,6 @@ import com.textify.textify.entity.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.Map;
 
 @RestController
 public class LoginController {
