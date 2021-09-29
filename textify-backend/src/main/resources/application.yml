@@ -1,12 +1,25 @@
 ###H2 Datenbank wegen Startschwieriegkeiten, spaeter Migration
 ###Auf PostgreSQL
-5,4 +5,5 @@ spring:
-  path: /h2-console  jpa:    properties:      javax:
-                             persistence:
-                               validation:
-                                 mode: none  data:    web:      pageable:        default-page-size: 10
-                             max-page-size: 100
-
+---
+spring:
+  profiles: prod
+  datasource:    url: jdbc:h2:./textify-prod
+  jpa:    hibernate:      ddl-auto: update
+  h2:
+    console:      enabled: false
+hoaxify:
+  upload-path: uploads-prod
+---
+spring:
+  profiles: dev
+  datasource:    url: jdbc:h2:mem:textify-dev
+hoaxify:
+  upload-path: uploads-dev
+---
+spring:
+  profiles: test
+hoaxify:
+  upload-path: uploads-test
 
 
 #
