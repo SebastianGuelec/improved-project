@@ -15,11 +15,16 @@ public class PostDTO {
 
     private UserDTO user;
 
+    private FileAttachmentDTO attachment;
+
     public PostDTO(Post post) {
         this.setId(post.getId());
         this.setContent(post.getContent());
         this.setDate(post.getTimestamp().getTime());
         this.setUser(new UserDTO(post.getUser()));
+        if(post.getAttachment() != null) {
+            this.setAttachment(new FileAttachmentDTO(post.getAttachment()));
+        }
     }
 
 

@@ -3,6 +3,7 @@ package com.textify.textify.service;
 
 import com.textify.textify.config.AppConfig;
 import com.textify.textify.entity.FileAttachment;
+import com.textify.textify.repo.UploadRepo;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,12 @@ public class FileService {
 
     Tika tika;
 
-    public FileService(AppConfig appConfig) {
+    UploadRepo uploadRepo;
+
+    public FileService(AppConfig appConfig, UploadRepo uploadRepo) {
         super();
         this.appConfig = appConfig;
+        this.uploadRepo = uploadRepo;
         tika = new Tika();
     }
 
@@ -61,11 +65,12 @@ public class FileService {
         try {
             byte[] fileAsByte = file.getBytes();
             FileUtils.writeByteArrayToFile(target, fileAsByte);
+            fileAttachment.setFileType(detectType(fileAsByte));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return fileAttachment;
+        return UploadRepo.save(fileAttachment);
     }
 }
 

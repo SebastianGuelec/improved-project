@@ -27,4 +27,7 @@ public class Post {
 
     @ManyToOne
     private User user;
+
+    @OneToOne(mappedBy="post")
+    private FileAttachment attachment;
 }

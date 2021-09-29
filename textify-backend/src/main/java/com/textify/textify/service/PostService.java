@@ -1,8 +1,10 @@
 package com.textify.textify.service;
 
+import com.textify.textify.entity.FileAttachment;
 import com.textify.textify.entity.Post;
 import com.textify.textify.entity.User;
 import com.textify.textify.repo.PostRepo;
+import com.textify.textify.repo.UploadRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,15 +18,23 @@ public class PostService {
 
     UserService userService;
 
-    public PostService(PostRepo postRepo, UserService userService) {
+    UploadRepo uploadRepo;
+
+    public PostService(PostRepo postRepo, UserService userService,UploadRepo uploadRepo ) {
         super();
         this.postRepo = postRepo;
         this.userService = userService;
+        this.uploadRepo = uploadRepo;
     }
 
     public Post save(User user, Post post) {
         post.setTimestamp(new Date());
         post.setUser(user);
+        if(post.getAttachment() != null) {
+            FileAttachment inDB = uploadRepo.findById(post.getAttachment().getId()).get();
+            inDB.setPost(post);
+            post.setAttachment(inDB);
+        }
         return postRepo.save(post);
     }
 
