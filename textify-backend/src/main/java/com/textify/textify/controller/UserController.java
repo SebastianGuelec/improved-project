@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("/users")
     Page<UserDTO> getUsers(@CurrentUser User loggedInUser, Pageable page) {
-        return userService.getUsers(loggedInUser,page).map(UserDTO::new);
+        return userService.getUsers(loggedInUser, page).map(UserDTO::new);
     }
 
     @GetMapping("/users/{username}")
@@ -48,25 +48,8 @@ public class UserController {
 
     @PutMapping("/users/{id:[0-9]+}")
     @PreAuthorize("#id == principal.id")
-    UserDTO updateUser(@PathVariable long id, @Valid, @RequestBody(required = false) UserUpdateDTO userUpdate) {
+    UserDTO updateUser(@PathVariable long id, @Valid , @RequestBody(required = false) UserUpdateDTO userUpdate) {
         User updated = userService.update(id, userUpdate);
         return new UserDTO(updated);
-    }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiError handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        ApiError apiError = new ApiError(400, "Validation error", request.getServletPath());
-
-        BindingResult result = exception.getBindingResult();
-
-        Map<String, String> validationErrors = new HashMap<>();
-
-        for (FieldError fieldError : result.getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        apiError.setValidationErrors(validationErrors);
-
-        return apiError;
     }
 }

@@ -1,21 +1,21 @@
 package com.textify.textify.entity;
 
 
-import com.sun.istack.NotNull;
+
 import lombok.Data;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -45,6 +45,9 @@ public class User implements UserDetails {
 
 
     private String image;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> post;
 
     @Override
     @Transient
