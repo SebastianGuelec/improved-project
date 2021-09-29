@@ -1,14 +1,14 @@
 package com.textify.textify.controller;
 
+import com.textify.textify.DTO.PostDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.Post;
 import com.textify.textify.entity.User;
 import com.textify.textify.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,7 +20,18 @@ public class PostController {
     PostService postService;
 
     @PostMapping("/posts")
-    void createPost(@Valid @RequestBody Post post, @CurrentUser User user) {
-    postService.save(user, post);
+    PostDTO createPost(@Valid @RequestBody Post post, @CurrentUser User user) {
+    return new PostDTO(user, post);
     }
+
+    @GetMapping("/posts")
+    Page<PostDTO> getAllHoaxes(Pageable pageable) {
+        return postService.getAllPosts(pageable).map(PostDTO::new);
+    }
+    @GetMapping("/users/{username}/posts")
+    Page<PostDTO> getPostsOfUser(@PathVariable String username, Pageable pageable) {
+        return postService.getPostsOfUser(username, pageable).map(PostDTO::new);
+
+    }
+
 }
