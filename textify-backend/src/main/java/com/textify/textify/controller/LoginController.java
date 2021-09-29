@@ -1,5 +1,6 @@
 package com.textify.textify.controller;
 
+import com.textify.textify.DTO.UserDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.User;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +13,8 @@ import java.util.Map;
 public class LoginController {
 
     @PostMapping("/api/v1/login")
-    Map<String, Object> handleLogin(@CurrentUser User loggedInUser) {
-        return Collections.singletonMap("id", loggedInUser.getId());
+    UserDTO handleLogin(@CurrentUser User loggedInUser) {
+        return new UserDTO(loggedInUser);
 
     }
 

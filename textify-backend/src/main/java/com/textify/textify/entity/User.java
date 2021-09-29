@@ -1,8 +1,7 @@
 package com.textify.textify.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
+
 import com.sun.istack.NotNull;
-import com.textify.textify.config.ViewInterfaces;
 import lombok.Data;
 
 import org.springframework.data.annotation.Id;
@@ -28,18 +27,15 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    @JsonView(ViewInterfaces.Base.class)
     private Long id;
 
     @NotNull
     @Size(min = 4, max=255)
     @UniqueUsername
-    @JsonView(ViewInterfaces.Base.class)
     private String username;
 
     @NotNull
     @Size(min = 4, max=255)
-    @JsonView(ViewInterfaces.Base.class)
     private String nickname;
 
     @NotNull
@@ -47,7 +43,7 @@ public class User implements UserDetails {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 
-    @JsonView(ViewInterfaces.Base.class)
+
     private String image;
 
     @Override

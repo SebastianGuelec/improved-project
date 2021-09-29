@@ -1,7 +1,7 @@
 package com.textify.textify.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.textify.textify.config.ViewInterfaces;
+
+import com.textify.textify.DTO.UserDTO;
 import com.textify.textify.entity.User;
 import com.textify.textify.errorHandling.ApiError;
 import com.textify.textify.errorHandling.GenericResponse;
@@ -31,9 +31,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    @JsonView(ViewInterfaces.Base.class)
-    Page<?> getUsers(){
-        return userService.getUsers();
+    Page<UserDTO> getUsers() {
+        return userService.getUsers().map(UserDTO::new);
     }
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
