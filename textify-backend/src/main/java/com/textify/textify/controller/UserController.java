@@ -1,10 +1,13 @@
 package com.textify.textify.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.textify.textify.config.ViewInterfaces;
 import com.textify.textify.entity.User;
 import com.textify.textify.errorHandling.ApiError;
 import com.textify.textify.errorHandling.GenericResponse;
 import com.textify.textify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,11 @@ public class UserController {
         return new GenericResponse("User saved.");
     }
 
+    @GetMapping("/users")
+    @JsonView(ViewInterfaces.Base.class)
+    Page<?> getUsers(){
+        return userService.getUsers();
+    }
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ApiError handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {

@@ -2,6 +2,9 @@ package com.textify.textify.service;
 
 import com.textify.textify.entity.User;
 import com.textify.textify.repo.UserRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +24,9 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
 
+    }
+    public Page<?> getUsers() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return userRepo.getAllUsersProjection(pageable);
     }
 }
