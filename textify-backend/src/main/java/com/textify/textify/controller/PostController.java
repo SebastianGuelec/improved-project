@@ -34,4 +34,16 @@ public class PostController {
 
     }
 
+
+    @GetMapping("/posts/{id:[0-9]+}")
+    Page<?> getPostsRelative(@PathVariable long id, Pageable pageable) {
+        return PostService.getOldPosts(id, pageable).map(PostDTO::new);
+    }
+
+
+    @GetMapping("/users/{username}/posts/{id:[0-9]+}")
+    Page<?> getPostsRelativeForUser(@PathVariable String username, @PathVariable long id, Pageable pageable) {
+        return PostService.getOldPostsOfUser(id, username, pageable).map(PostDTO::new);
+
+    }
 }
