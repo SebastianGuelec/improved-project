@@ -8,8 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -18,11 +20,13 @@ public class UserService {
     UserRepo userRepo;
 
     BCryptPasswordEncoder passwordEncoder;
+    FileService fileService;
 
-    public UserService(UserRepo userRepo){
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder, FileService fileService) {
         super();
         this.userRepo = userRepo;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.fileService = fileService;
     }
     public User save(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -46,8 +50,15 @@ public class UserService {
     public User update(long id, UserUpdateDTO userUpdate) {
         User inDB = userRepo.getOne(id);
         inDB.setNickname(userUpdate.getNickname());
-        String savedImageName = inDB.getUsername() + UUID.randomUUID().toString().replaceAll("-", "");
-        inDB.setImage(savedImageName);
+        if(userUpdate.getImage() != null) {
+            String savedImageName;
+            try {
+                savedImageName = fileService.saveProfileImage(userUpdate.getImage());
+                inDB.setImage(savedImageName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return userRepo.save(inDB);
     }
 }

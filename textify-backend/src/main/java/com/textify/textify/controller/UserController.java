@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class UserController {
 
     @PutMapping("/users/{id:[0-9]+}")
     @PreAuthorize("#id == principal.id")
-    UserDTO updateUser(@PathVariable long id, @RequestBody(required = false) UserUpdateDTO userUpdate) {
+    UserDTO updateUser(@PathVariable long id, @Valid, @RequestBody(required = false) UserUpdateDTO userUpdate) {
         User updated = userService.update(id, userUpdate);
         return new UserDTO(updated);
     }
