@@ -4,13 +4,18 @@ import com.textify.textify.DTO.PostDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.Post;
 import com.textify.textify.entity.User;
+import com.textify.textify.repo.PostRepo;
 import com.textify.textify.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/1.0")
@@ -36,14 +41,38 @@ public class PostController {
 
 
     @GetMapping("/posts/{id:[0-9]+}")
-    Page<?> getPostsRelative(@PathVariable long id, Pageable pageable) {
-        return PostService.getOldPosts(id, pageable).map(PostDTO::new);
+    ResponseEntity<?> getPostsRelative(@PathVariable long id, Pageable pageable,
+                                       @RequestParam(name="direction", defaultValue="after") String direction,
+                                       @RequestParam(name="count", defaultValue="false", required=false) boolean count
+    ) {
+        if (!direction.equalsIgnoreCase("after")) {
+            return ResponseEntity.ok(postService.getOldPosts(id, pageable).map(PostDTO::new));
+        }
+
+        if(count == true) {
+            long newPostCount = postService.getNewPostsCount(id);
+            return ResponseEntity.ok(Collections.singletonMap("count", newPostCount));
+        }
+
+        List<PostDTO> newPosts = postService.getNewPosts(id, pageable).stream()
+                .map(PostDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(newPosts);
     }
 
-
     @GetMapping("/users/{username}/posts/{id:[0-9]+}")
-    Page<?> getPostsRelativeForUser(@PathVariable String username, @PathVariable long id, Pageable pageable) {
-        return PostService.getOldPostsOfUser(id, username, pageable).map(PostDTO::new);
-
+    ResponseEntity<?> getPostsRelativeForUser(@PathVariable String username, @PathVariable long id, Pageable pageable ,
+                                              @RequestParam(name="direction", defaultValue="after") String direction,
+                                              @RequestParam(name="count", defaultValue="false", required=false) boolean count
+    ) {
+        if(!direction.equalsIgnoreCase("after")) {
+            return ResponseEntity.ok(postService.getOldPostsOfUser(id, username, pageable).map(PostDTO::new));
+        }
+        if(count == true) {
+            long newPostCount = postService.getNewPostsCountOfUser(id, username);
+            return ResponseEntity.ok(Collections.singletonMap("count", newPostCount));
+        }
+        List<PostDTO> newPosts = postService.getNewPostsOfUser(id, username, pageable).stream()
+                .map(PostDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(newPosts);
     }
 }
