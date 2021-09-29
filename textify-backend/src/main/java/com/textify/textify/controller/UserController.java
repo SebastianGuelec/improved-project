@@ -8,6 +8,7 @@ import com.textify.textify.errorHandling.GenericResponse;
 import com.textify.textify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    Page<UserDTO> getUsers() {
-        return userService.getUsers().map(UserDTO::new);
+    Page<UserDTO> getUsers(Pageable page) {
+        return userService.getUsers(page).map(UserDTO::new);
     }
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)

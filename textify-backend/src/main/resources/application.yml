@@ -1,10 +1,11 @@
 ###H2 Datenbank wegen Startschwieriegkeiten, spaeter Migration
 ###Auf PostgreSQL
-spring.h2.console.enabled= true
-spring.h2.console.path= /h2-console
-spring.datasource.generate-unique-name=false
-
-
+5,4 +5,5 @@ spring:
+  path: /h2-console  jpa:    properties:      javax:
+                             persistence:
+                               validation:
+                                 mode: none  data:    web:      pageable:        default-page-size: 10
+                             max-page-size: 100
 
 
 

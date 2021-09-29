@@ -25,7 +25,7 @@ public class UserService {
         return userRepo.save(user);
 
     }
-    public Page<User> getUsers() {
+    public Page<User> getUsers(Pageable page) {
         Pageable pageable = PageRequest.of(0, 10);
         return userRepo.findAll(pageable);
     }
