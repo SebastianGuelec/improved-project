@@ -25,4 +25,4 @@ public class ValidUsername implements ConstraintValidator<UniqueUsername, String
     }
 
 }
-}
+
