@@ -3,11 +3,14 @@ package com.textify.textify.service;
 import com.textify.textify.entity.User;
 import com.textify.textify.errorHandling.NotFoundException;
 import com.textify.textify.repo.UserRepo;
+import com.textify.textify.DTO.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -37,7 +40,15 @@ public class UserService {
         if(inDB == null) {
             throw new NotFoundException(username + " not found");
         }
+
         return inDB;
+    }
+    public User update(long id, UserUpdateDTO userUpdate) {
+        User inDB = userRepo.getOne(id);
+        inDB.setNickname(userUpdate.getNickname());
+        String savedImageName = inDB.getUsername() + UUID.randomUUID().toString().replaceAll("-", "");
+        inDB.setImage(savedImageName);
+        return userRepo.save(inDB);
     }
 }
 

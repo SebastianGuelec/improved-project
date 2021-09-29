@@ -2,6 +2,7 @@ package com.textify.textify.controller;
 
 
 import com.textify.textify.DTO.UserDTO;
+import com.textify.textify.DTO.UserUpdateDTO;
 import com.textify.textify.entity.CurrentUser;
 import com.textify.textify.entity.User;
 import com.textify.textify.errorHandling.ApiError;
@@ -46,8 +47,9 @@ public class UserController {
 
     @PutMapping("/users/{id:[0-9]+}")
     @PreAuthorize("#id == principal.id")
-    void updateUser(@PathVariable long id) {
-
+    UserDTO updateUser(@PathVariable long id, @RequestBody(required = false) UserUpdateDTO userUpdate) {
+        User updated = userService.update(id, userUpdate);
+        return new UserDTO(updated);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
