@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from '../components/Input';
 import ButtonWithProgress from '../components/ButtonWithProgress';
+import ButtonWithIndication from '../components/ButtonwithIndication';
 
 export class LoginPage extends React.Component {
   state = {
@@ -84,7 +85,7 @@ export class LoginPage extends React.Component {
           </div>
         )}
         <div className="text-center">
-          <ButtonWithProgress
+          <ButtonWithIndication
             onClick={this.onClickLogin}
             disabled={disableSubmit || this.state.pendingApiCall}
             text="Login"
@@ -101,5 +102,17 @@ LoginPage.defaultProps = {
     postLogin: () => new Promise((resolve, reject) => resolve({}))
   }
 };
+const mapDispatchToProps = (dispatch) => {
+    return {
+      actions: {
+        postLogin: (body) => dispatch(authActions.loginHandler(body))
+      }
+    };
+  };
+  
+  export default connect(
+    null,
+    mapDispatchToProps
+    )
 
 export default LoginPage;
