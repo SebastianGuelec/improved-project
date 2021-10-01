@@ -17,11 +17,7 @@ public class ValidUsername implements ConstraintValidator<UniqueUsername, String
     public boolean isValid(String value, ConstraintValidatorContext context) {
 
         User inDB = userRepo.findByUsername(value);
-        if(inDB == null) {
-            return true;
-        }
-
-        return false;
+        return inDB == null;
     }
 
 }

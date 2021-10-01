@@ -8,10 +8,12 @@ import com.textify.textify.repo.UploadRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class PostService {
 
     PostRepo postRepo;
@@ -78,21 +80,15 @@ public class PostService {
     }
 
     private Specification<Post> userIs(User user){
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get("user"), user);
-        };
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user"), user);
     }
 
     private Specification<Post> idLessThan(long id){
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.lessThan(root.get("id"), id);
-        };
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("id"), id);
     }
 
     private Specification<Post> idGreaterThan(long id){
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.greaterThan(root.get("id"), id);
-        };
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get("id"), id);
     }
     public void deletePost(long id) {
         Post post = postRepo.getOne(id);

@@ -21,7 +21,7 @@ public class PostSecurityService {
         Optional<Post> optionalPost = postRepo.findById(postId);
         if(optionalPost.isPresent()) {
             Post inDB = optionalPost.get();
-            return inDB.getUser().getId() == loggedInUser.getId();
+            return inDB.getUser().getId().equals(loggedInUser.getId());
         }
         return false;
     }

@@ -1,18 +1,43 @@
 ###H2 Datenbank wegen Startschwieriegkeiten, spaeter Migration
 ###Auf PostgreSQL
+spring:
+  profiles:
+    active:
+      - dev
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 100
 ---
 spring:
   profiles: prod
-  datasource:    url: jdbc:h2:./textify-prod
-  jpa:    hibernate:      ddl-auto: update
+  datasource:
+    url: jdbc:h2:./hoaxify-prod
+    username: sa
+  jpa:
+    hibernate:
+      ddl-auto: update
   h2:
-    console:      enabled: false
+    console:
+      enabled: false
 hoaxify:
   upload-path: uploads-prod
 ---
 spring:
   profiles: dev
-  datasource:    url: jdbc:h2:mem:textify-dev
+  datasource:
+    url: jdbc:h2:mem:hoaxify-dev
 hoaxify:
   upload-path: uploads-dev
 ---
@@ -20,8 +45,6 @@ spring:
   profiles: test
 hoaxify:
   upload-path: uploads-test
-
-
 #
 #spring.datasource.url = jdbc:postgresql://localhost:5432/projekt
 ##DataSourceSettings#
